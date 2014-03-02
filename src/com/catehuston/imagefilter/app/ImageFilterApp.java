@@ -29,7 +29,7 @@ public class ImageFilterApp extends PApplet {
 		background(0);
 
 		//Choose the file.
-		selectInput("Select a file to process:");
+		selectInput("Select a file to process:", "fileSelected");
 	}
 	
 	public void draw() {
@@ -67,18 +67,56 @@ public class ImageFilterApp extends PApplet {
 			}
 		});
 		popupMenu.add(menuItem2);
+		
+		JMenuItem menuItem3 = new JMenuItem("Red Filter");
+		menuItem3.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				colorFilter(30, 0, 0);;
+				redraw();
+			}
+		});
+		popupMenu.add(menuItem3);
+		
+		JMenuItem menuItem4 = new JMenuItem("Blue Filter");
+		menuItem4.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				colorFilter(0, 30, 0);;
+				redraw();
+			}
+		});
+		popupMenu.add(menuItem4);
+		
+		JMenuItem menuItem5 = new JMenuItem("Green Filter");
+		menuItem5.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				colorFilter(0, 0, 30);;
+				redraw();
+			}
+		});
+		popupMenu.add(menuItem5);
+		
+		JMenuItem menuItem6 = new JMenuItem("Composite Filter");
+		menuItem6.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				colorFilter(30, 30, 30);;
+				redraw();
+			}
+		});
+		popupMenu.add(menuItem6);
+		
 		popupMenu.show(this, 0, 0);
 	}
 	
 	private void dominantHueFilter() {
-		processImageForHue(false);
-	}
-	
-	private void hideDominentHueFilter() {
 		processImageForHue(true);
 	}
 	
-	private void processImageForHue(boolean hideHue) {
+	private void hideDominentHueFilter() {
+		processImageForHue(false);
+	}
+	
+	private void processImageForHue(boolean showHue) {
+		colorMode(HSB, (hueRange - 1));
 		img.loadPixels();
 		int numberOfPixels = img.pixels.length;
 		HSBColor dominantHue = ColorHelper.hsbColorFromImage(img, this, hueRange);
@@ -88,7 +126,7 @@ public class ImageFilterApp extends PApplet {
 		for (int i = 0; i < numberOfPixels; i++) {
 			int pixel = img.pixels[i];
 			float hue = hue(pixel);
-			if (hueInRange(hue, lower, upper) == hideHue) {
+			if (hueInRange(hue, lower, upper) == showHue) {
 				float brightness = brightness(pixel);
 				img.pixels[i] = color(brightness);
 			}
@@ -107,6 +145,25 @@ public class ImageFilterApp extends PApplet {
 			return hue < upper && hue > lower;
 		} else {
 			return hue > upper || hue < lower;
+		}
+	}
+
+	private void colorFilter(int minRed, int minBlue, int minGreen) {
+		colorMode(RGB, 100);
+		img.loadPixels();
+		int numberOfPixels = img.pixels.length;
+		for (int i = 0; i < numberOfPixels; i++) {
+			int pixel = img.pixels[i];
+			int alpha = Math.round(alpha(pixel));
+			int red = Math.round(red(pixel));
+			int green = Math.round(green(pixel));
+			int blue = Math.round(blue(pixel));
+			
+			red = (red >= minRed) ? red : 0;
+			green = (green >= minGreen) ? green : 0;
+			blue = (blue >= minBlue) ? blue : 0;
+			
+			img.pixels[i] = color((float) red, (float) green, (float) blue, (float) alpha);
 		}
 	}
 }
