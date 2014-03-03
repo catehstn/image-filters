@@ -4,6 +4,7 @@ import java.io.File;
 
 import processing.core.PApplet;
 
+import com.catehuston.imagefilter.color.ColorHelper;
 import com.catehuston.imagefilter.model.ImageState;
 
 
@@ -27,7 +28,7 @@ public class ImageFilterApp extends PApplet {
 
 	public void setup() {
 		noLoop();
-		imageState = new ImageState();
+		imageState = new ImageState(new ColorHelper());
 		
 		// Set up the view.
 		size(imageMax + sideBarWidth, imageMax);

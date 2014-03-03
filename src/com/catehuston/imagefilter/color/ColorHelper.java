@@ -7,7 +7,7 @@ import processing.core.PImage;
 
 public class ColorHelper {
 	
-	public static boolean hueInRange(float hue, int hueRange, float lower, float upper) {
+	public boolean hueInRange(float hue, int hueRange, float lower, float upper) {
 		// Need to compensate for it being circular - can go around.
 		if (lower < 0) {
 			lower += hueRange;
@@ -22,7 +22,7 @@ public class ColorHelper {
 		}
 	}
 	
-	public static HSBColor hsbColorFromImage(PApplet applet, PImage img, int hueRange) {
+	public HSBColor hsbColorFromImage(PApplet applet, PImage img, int hueRange) {
 		img.loadPixels();
 		int numberOfPixels = img.pixels.length;
 		int[] hues = new int[hueRange];
@@ -55,19 +55,19 @@ public class ColorHelper {
 		return new HSBColor(hue, s, b);
 	}
 	
-	public static void processImageForHue(PApplet applet, PImage img, int hueRange,
+	public void processImageForHue(PApplet applet, PImage img, int hueRange,
 			int hueTolerance, boolean showHue) {
 		applet.colorMode(PApplet.HSB, (hueRange - 1));
 		img.loadPixels();
 		int numberOfPixels = img.pixels.length;
-		HSBColor dominantHue = ColorHelper.hsbColorFromImage(applet, img, hueRange);
+		HSBColor dominantHue = hsbColorFromImage(applet, img, hueRange);
 		// Manipulate photo, grayscale any pixel that isn't close to that hue.
 		float lower = dominantHue.h - hueTolerance;
 		float upper = dominantHue.h + hueTolerance;
 		for (int i = 0; i < numberOfPixels; i++) {
 			int pixel = img.pixels[i];
 			float hue = applet.hue(pixel);
-			if (ColorHelper.hueInRange(hue, hueRange, lower, upper) == showHue) {
+			if (hueInRange(hue, hueRange, lower, upper) == showHue) {
 				float brightness = applet.brightness(pixel);
 				img.pixels[i] = applet.color(brightness);
 			}
@@ -75,7 +75,7 @@ public class ColorHelper {
 		img.updatePixels();
 	}
 	
-	public static void applyColorFilter(PApplet applet, PImage img, int minRed,
+	public void applyColorFilter(PApplet applet, PImage img, int minRed,
 			int minBlue, int minGreen, int colorRange) {
 		applet.colorMode(PApplet.RGB, colorRange);
 		img.loadPixels();

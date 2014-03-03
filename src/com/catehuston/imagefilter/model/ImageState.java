@@ -7,6 +7,7 @@ import processing.core.PImage;
 
 public class ImageState {
 	
+	ColorHelper colorHelper;
 	PImage image;
 	String filepath;
 	
@@ -15,6 +16,10 @@ public class ImageState {
 	int blueFilter = 0;
 	int greenFilter = 0;
 	int redFilter = 0;
+	
+	public ImageState(ColorHelper colorHelper) {
+		this.colorHelper = colorHelper;
+	}
 	
 	public PImage image() {
 		return image;
@@ -46,11 +51,11 @@ public class ImageState {
 	
 	public void updateImage(PApplet applet, int hueRange, int hueTolerance, int rgbColorRange) {
 		if (dominantHueShowing()) {
-			ColorHelper.processImageForHue(applet, image, hueRange, hueTolerance, true);
+			colorHelper.processImageForHue(applet, image, hueRange, hueTolerance, true);
 		} else if (dominantHueHidden()) {
-			ColorHelper.processImageForHue(applet, image, hueRange, hueTolerance, false);
+			colorHelper.processImageForHue(applet, image, hueRange, hueTolerance, false);
 		}
-		ColorHelper.applyColorFilter(applet, image, redFilter,
+		colorHelper.applyColorFilter(applet, image, redFilter,
 				blueFilter, greenFilter, rgbColorRange);
 		image.updatePixels();
 	}
@@ -115,5 +120,15 @@ public class ImageState {
 		dominantHueShowing = false;
 		dominantHueHidden = false;
 		setUpImage(applet, imageMax);
+	}
+	
+	// For testing purposes only.
+	protected void set(PImage image, boolean dominantHueHidden, boolean dominantHueShowing,
+			int blueFilter, int greenFilter, int redFilter) {
+		this.dominantHueHidden = dominantHueHidden;
+		this.dominantHueShowing = dominantHueShowing;
+		this.blueFilter = blueFilter;
+		this.greenFilter = greenFilter;
+		this.redFilter = redFilter;
 	}
 }

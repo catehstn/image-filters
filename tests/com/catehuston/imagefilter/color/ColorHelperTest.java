@@ -26,6 +26,7 @@ import com.catehuston.imagefilter.model.HSBColor;
 public class ColorHelperTest {
 	
 	@Mock PApplet applet;
+	ColorHelper colorHelper;
 	PImage image;
 	
 	private static final int px1 = -3887210;
@@ -35,8 +36,10 @@ public class ColorHelperTest {
 	private static final int px5 = -399164;
 
 	@Before public void setUp() throws Exception {
-		//applet = mock(PApplet.class);
-		MockitoAnnotations.initMocks(this);
+		applet = mock(PApplet.class);
+		//MockitoAnnotations.initMocks(this);
+		
+		colorHelper = new ColorHelper();
 		
 		image = new PImage();
 		int[] pixels = { px1, px2, px3, px4, px5 };
@@ -49,23 +52,23 @@ public class ColorHelperTest {
 
 	@Test public void testHueInRange() {
 		// In range.
-		assertTrue(ColorHelper.hueInRange(10, 20, 5, 15));
+		assertTrue(colorHelper.hueInRange(10, 20, 5, 15));
 		// Lowest end of range.
-		assertTrue(ColorHelper.hueInRange(6, 20, 5, 15));
+		assertTrue(colorHelper.hueInRange(6, 20, 5, 15));
 		// Highest end of range.
-		assertTrue(ColorHelper.hueInRange(14, 20, 5, 15));
+		assertTrue(colorHelper.hueInRange(14, 20, 5, 15));
 		// In range, looping over.
-		assertTrue(ColorHelper.hueInRange(4, 20, 10, 25));
+		assertTrue(colorHelper.hueInRange(4, 20, 10, 25));
 		// In range, looping under.
-		assertTrue(ColorHelper.hueInRange(4, 20, -5, 5));
+		assertTrue(colorHelper.hueInRange(4, 20, -5, 5));
 		// Out of range - below.
-		assertFalse(ColorHelper.hueInRange(4, 20, 5, 15));
+		assertFalse(colorHelper.hueInRange(4, 20, 5, 15));
 		// Out of range - above.
-		assertFalse(ColorHelper.hueInRange(16, 20, 5, 15));
+		assertFalse(colorHelper.hueInRange(16, 20, 5, 15));
 		// Out of range, looping over.
-		assertFalse(ColorHelper.hueInRange(10, 20, 15, 25));
+		assertFalse(colorHelper.hueInRange(10, 20, 15, 25));
 		// Out of range, looping under.
-		assertFalse(ColorHelper.hueInRange(6, 20, -5, 5));
+		assertFalse(colorHelper.hueInRange(6, 20, -5, 5));
 	}
 
 	@Test public void testHsbColorFromImage() {
@@ -89,7 +92,7 @@ public class ColorHelperTest {
 		when(applet.saturation(-399164)).thenReturn(9F);
 		when(applet.brightness(-399164)).thenReturn(14F);*/
 		
-		HSBColor color = ColorHelper.hsbColorFromImage(applet, image, 100);
+		HSBColor color = colorHelper.hsbColorFromImage(applet, image, 100);
 		
 		// Check results.
 		assertEquals(3F, color.h, 0);
@@ -99,7 +102,7 @@ public class ColorHelperTest {
 	
 	@Test public void testProcessImageForHue() {
 		
-		ColorHelper.processImageForHue(applet, image, 10, 10, true);
+		colorHelper.processImageForHue(applet, image, 10, 10, true);
 		verify(applet).colorMode(PApplet.HSB, 9);
 	}
 	
@@ -109,7 +112,7 @@ public class ColorHelperTest {
 		//stub(applet.alpha(Mockito.eq(px1))).toReturn(0F);
 		when(applet.alpha(px1)).thenReturn(0F);
 		
-		ColorHelper.applyColorFilter(applet, image, 10, 10, 10, 100);
+		colorHelper.applyColorFilter(applet, image, 10, 10, 10, 100);
 		verify(applet).colorMode(PApplet.RGB, 100);
 	}
 }
