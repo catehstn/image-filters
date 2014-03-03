@@ -6,7 +6,6 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 import com.catehuston.imagefilter.color.ColorHelper;
-import com.catehuston.imagefilter.model.HSBColor;
 
 
 @SuppressWarnings("serial")
@@ -15,12 +14,15 @@ public class ImageFilterApp extends PApplet {
 	PImage img;
 	String filePath;
 	
-	static final int rgbColorRange = 100;
+	static final String instructions = "Press r to\nincrease red\nfilter, e to\nreduce it.\n"
+			+ "g to increase\ngreen filter, f\nto reduce it.\nb to increase\nblue filter,\nv to reduce it.\n"
+			+ "h hides the\ndominant hue\nand s shows the\ndominant hue.\nPress c to\nchoose a new\nfile.";
 	static final int filterHeight = 2;
 	static final int filterIncrement = 5;
 	static final int hueRange = 320; 
 	static final int hueTolerance = 10;
 	static final int imageMax = 640;
+	static final int rgbColorRange = 100;
 	static final int sideBarPadding = 10;
 	static final int sideBarWidth = rgbColorRange + 2 * sideBarPadding;
 	
@@ -40,33 +42,35 @@ public class ImageFilterApp extends PApplet {
 	
 	public void draw() {
 		background(0);
-		
+
 		colorMode(RGB, rgbColorRange);
 		stroke(rgbColorRange);
 		line(imageMax, 0, imageMax, imageMax);
-		
+
 		// Draw red line
 		int x = imageMax + sideBarPadding;
 		int y = 2 * sideBarPadding;
 		stroke(rgbColorRange, 0, 0);
 		line(x, y, x + rgbColorRange, y);
 		line(x + redFilter, y - filterHeight, x + redFilter, y + filterHeight);
-		
+
 		// Draw green line
 		y += 2 * sideBarPadding;
 		stroke(0, rgbColorRange, 0);
 		line(x, y, x + rgbColorRange, y);
 		line(x + greenFilter, y - filterHeight, x + greenFilter, y + filterHeight);
-		
+
 		// Draw blue line
 		y += 2 * sideBarPadding;
 		stroke(0, 0, rgbColorRange);
 		line(x, y, x + rgbColorRange, y);
 		line(x + blueFilter, y - filterHeight, x + blueFilter, y + filterHeight);
 		
+		y += 4 * sideBarPadding;
+		text(instructions, x, y);
+
 		// Draw image.
 		if (img != null) {
-			print("draw image\n");
 			drawImage();
 		}
 		updatePixels();
@@ -84,50 +88,15 @@ public class ImageFilterApp extends PApplet {
 	}
 	
 	private void dominantHueFilter() {
-		processImageForHue(true);
+		ColorHelper.processImageForHue(this, img, hueRange, hueTolerance, true);
 	}
 	
 	private void hideDominentHueFilter() {
-		processImageForHue(false);
-	}
-	
-	private void processImageForHue(boolean showHue) {
-		img = loadImage(filePath);
-		colorMode(HSB, (hueRange - 1));
-		img.loadPixels();
-		int numberOfPixels = img.pixels.length;
-		HSBColor dominantHue = ColorHelper.hsbColorFromImage(img, this, hueRange);
-		// Manipulate photo, grayscale any pixel that isn't close to that hue.
-		float lower = dominantHue.h - hueTolerance;
-		float upper = dominantHue.h + hueTolerance;
-		for (int i = 0; i < numberOfPixels; i++) {
-			int pixel = img.pixels[i];
-			float hue = hue(pixel);
-			if (hueInRange(hue, lower, upper) == showHue) {
-				float brightness = brightness(pixel);
-				img.pixels[i] = color(brightness);
-			}
-		}
-		img.updatePixels();
-	}
-	
-	private static boolean hueInRange(float hue, float lower, float upper) {
-		// Need to compensate for it being circular - can go around.
-		if (lower < 0) {
-			lower += hueRange;
-		}
-		if (upper > hueRange) {
-			upper -= hueRange;
-		}
-		if (lower < upper) {
-			return hue < upper && hue > lower;
-		} else {
-			return hue > upper || hue < lower;
-		}
+		ColorHelper.processImageForHue(this, img, hueRange, hueTolerance, false);
 	}
 	
 	private void drawImage() {
-		colorFilter(redFilter, blueFilter, greenFilter);
+		ColorHelper.applyColorFilter(this, img, redFilter, blueFilter, greenFilter, rgbColorRange);
 		int imgWidth = imageMax;
 		int imgHeight = imageMax;
 		if (img.width > img.height) {
@@ -137,25 +106,6 @@ public class ImageFilterApp extends PApplet {
 		}
 		imageMode(CENTER);
 		image(img, 320, 320, imgWidth, imgHeight);
-	}
-
-	private void colorFilter(int minRed, int minBlue, int minGreen) {
-		colorMode(RGB, rgbColorRange);
-		img.loadPixels();
-		int numberOfPixels = img.pixels.length;
-		for (int i = 0; i < numberOfPixels; i++) {
-			int pixel = img.pixels[i];
-			int alpha = Math.round(alpha(pixel));
-			int red = Math.round(red(pixel));
-			int green = Math.round(green(pixel));
-			int blue = Math.round(blue(pixel));
-			
-			red = (red >= minRed) ? red : 0;
-			green = (green >= minGreen) ? green : 0;
-			blue = (blue >= minBlue) ? blue : 0;
-			
-			img.pixels[i] = color((float) red, (float) green, (float) blue, (float) alpha);
-		}
 	}
 	
 	public void keyPressed() {
@@ -198,7 +148,7 @@ public class ImageFilterApp extends PApplet {
 	}
 	
 	private void chooseFile() {
-		//Choose the file.
+		// Choose the file.
 		selectInput("Select a file to process:", "fileSelected");
 	}
 }

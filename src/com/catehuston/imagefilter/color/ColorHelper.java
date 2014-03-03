@@ -7,7 +7,22 @@ import processing.core.PImage;
 
 public class ColorHelper {
 	
-	public static HSBColor hsbColorFromImage(PImage img, PApplet applet, int hueRange) {
+	public static boolean hueInRange(float hue, int hueRange, float lower, float upper) {
+		// Need to compensate for it being circular - can go around.
+		if (lower < 0) {
+			lower += hueRange;
+		}
+		if (upper > hueRange) {
+			upper -= hueRange;
+		}
+		if (lower < upper) {
+			return hue < upper && hue > lower;
+		} else {
+			return hue > upper || hue < lower;
+		}
+	}
+	
+	public static HSBColor hsbColorFromImage(PApplet applet, PImage img, int hueRange) {
 		img.loadPixels();
 		int numberOfPixels = img.pixels.length;
 		int[] hues = new int[hueRange];
@@ -38,5 +53,43 @@ public class ColorHelper {
 		float s = saturations[hue] / hueCount;
 		float b = brightnesses[hue] / hueCount;
 		return new HSBColor(hue, s, b);
+	}
+	
+	public static void processImageForHue(PApplet applet, PImage img, int hueRange, int hueTolerance, boolean showHue) {
+		applet.colorMode(PApplet.HSB, (hueRange - 1));
+		img.loadPixels();
+		int numberOfPixels = img.pixels.length;
+		HSBColor dominantHue = ColorHelper.hsbColorFromImage(applet, img, hueRange);
+		// Manipulate photo, grayscale any pixel that isn't close to that hue.
+		float lower = dominantHue.h - hueTolerance;
+		float upper = dominantHue.h + hueTolerance;
+		for (int i = 0; i < numberOfPixels; i++) {
+			int pixel = img.pixels[i];
+			float hue = applet.hue(pixel);
+			if (ColorHelper.hueInRange(hue, hueRange, lower, upper) == showHue) {
+				float brightness = applet.brightness(pixel);
+				img.pixels[i] = applet.color(brightness);
+			}
+		}
+		img.updatePixels();
+	}
+	
+	public static void applyColorFilter(PApplet applet, PImage img, int minRed, int minBlue, int minGreen, int colorRange) {
+		applet.colorMode(PApplet.RGB, colorRange);
+		img.loadPixels();
+		int numberOfPixels = img.pixels.length;
+		for (int i = 0; i < numberOfPixels; i++) {
+			int pixel = img.pixels[i];
+			int alpha = Math.round(applet.alpha(pixel));
+			int red = Math.round(applet.red(pixel));
+			int green = Math.round(applet.green(pixel));
+			int blue = Math.round(applet.blue(pixel));
+			
+			red = (red >= minRed) ? red : 0;
+			green = (green >= minGreen) ? green : 0;
+			blue = (blue >= minBlue) ? blue : 0;
+			
+			img.pixels[i] = applet.color((float) red, (float) green, (float) blue, (float) alpha);
+		}
 	}
 }
