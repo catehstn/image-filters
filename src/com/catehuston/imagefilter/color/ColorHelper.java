@@ -55,7 +55,8 @@ public class ColorHelper {
 		return new HSBColor(hue, s, b);
 	}
 	
-	public static void processImageForHue(PApplet applet, PImage img, int hueRange, int hueTolerance, boolean showHue) {
+	public static void processImageForHue(PApplet applet, PImage img, int hueRange,
+			int hueTolerance, boolean showHue) {
 		applet.colorMode(PApplet.HSB, (hueRange - 1));
 		img.loadPixels();
 		int numberOfPixels = img.pixels.length;
@@ -74,7 +75,8 @@ public class ColorHelper {
 		img.updatePixels();
 	}
 	
-	public static void applyColorFilter(PApplet applet, PImage img, int minRed, int minBlue, int minGreen, int colorRange) {
+	public static void applyColorFilter(PApplet applet, PImage img, int minRed,
+			int minBlue, int minGreen, int colorRange) {
 		applet.colorMode(PApplet.RGB, colorRange);
 		img.loadPixels();
 		int numberOfPixels = img.pixels.length;

@@ -16,7 +16,8 @@ public class ImageFilterApp extends PApplet {
 	
 	static final String instructions = "Press r to\nincrease red\nfilter, e to\nreduce it.\n"
 			+ "g to increase\ngreen filter, f\nto reduce it.\nb to increase\nblue filter,\nv to reduce it.\n"
-			+ "h hides the\ndominant hue\nand s shows the\ndominant hue.\nPress c to\nchoose a new\nfile.";
+			+ "h hides the\ndominant hue\nand s shows the\ndominant hue.\nPress c to\nchoose a new\nfile. Press"
+			+ " space\nto reset";
 	static final int filterHeight = 2;
 	static final int filterIncrement = 5;
 	static final int hueRange = 320; 
@@ -26,6 +27,8 @@ public class ImageFilterApp extends PApplet {
 	static final int sideBarPadding = 10;
 	static final int sideBarWidth = rgbColorRange + 2 * sideBarPadding;
 	
+	boolean dominentHueHidden = false;
+	boolean dominantHueShowing = false;
 	int redFilter = 0;
 	int blueFilter = 0;
 	int greenFilter = 0;
@@ -65,7 +68,7 @@ public class ImageFilterApp extends PApplet {
 		stroke(0, 0, rgbColorRange);
 		line(x, y, x + rgbColorRange, y);
 		line(x + blueFilter, y - filterHeight, x + blueFilter, y + filterHeight);
-		
+
 		y += 4 * sideBarPadding;
 		text(instructions, x, y);
 
@@ -82,30 +85,21 @@ public class ImageFilterApp extends PApplet {
 			println("User hit cancel.");
 		} else {
 			this.filePath = file.getAbsolutePath();
-			img = loadImage(filePath);
+			setUpImage();
 			redraw();
 		}
 	}
 	
-	private void dominantHueFilter() {
-		ColorHelper.processImageForHue(this, img, hueRange, hueTolerance, true);
-	}
-	
-	private void hideDominentHueFilter() {
-		ColorHelper.processImageForHue(this, img, hueRange, hueTolerance, false);
-	}
-	
 	private void drawImage() {
-		ColorHelper.applyColorFilter(this, img, redFilter, blueFilter, greenFilter, rgbColorRange);
-		int imgWidth = imageMax;
-		int imgHeight = imageMax;
-		if (img.width > img.height) {
-			imgHeight = (imgHeight *  img.height) / img.width;
-		} else {
-			imgWidth = (imgWidth * img.width) / img.height;
-		}
 		imageMode(CENTER);
-		image(img, 320, 320, imgWidth, imgHeight);
+		if (dominantHueShowing) {
+			ColorHelper.processImageForHue(this, img, hueRange, hueTolerance, true);
+		} else if (dominentHueHidden) {
+			ColorHelper.processImageForHue(this, img, hueRange, hueTolerance, false);
+		}
+		ColorHelper.applyColorFilter(this, img, redFilter, blueFilter, greenFilter, rgbColorRange);
+		img.updatePixels();
+		image(img, 320, 320, img.width, img.height);
 	}
 	
 	public void keyPressed() {
@@ -138,11 +132,15 @@ public class ImageFilterApp extends PApplet {
 			 chooseFile();
 			 break;
 		 case 'h':
-			 hideDominentHueFilter();
+			 dominentHueHidden = true;
+			 dominantHueShowing = false;
 			 break;
 		 case 's':
-			 dominantHueFilter();
+			 dominentHueHidden = false;
+			 dominantHueShowing = true;
 			 break;
+		 case ' ':
+			 resetImage();
 		 }
 		 redraw();
 	}
@@ -150,5 +148,30 @@ public class ImageFilterApp extends PApplet {
 	private void chooseFile() {
 		// Choose the file.
 		selectInput("Select a file to process:", "fileSelected");
+	}
+	
+	private void setUpImage() {
+		img = null;
+		img = loadImage(filePath);
+		// Fix the size.
+		if (img.width > imageMax || img.height > imageMax) {
+			int imgWidth = imageMax;
+			int imgHeight = imageMax;
+			if (img.width > img.height) {
+				imgHeight = (imgHeight *  img.height) / img.width;
+			} else {
+				imgWidth = (imgWidth * img.width) / img.height;
+			}
+			img.resize(imgWidth, imgHeight);
+		}
+	}
+	
+	private void resetImage() {
+		redFilter = 0;
+		greenFilter = 0;
+		blueFilter = 0;
+		dominantHueShowing = false;
+		dominentHueHidden = false;
+		setUpImage();
 	}
 }
