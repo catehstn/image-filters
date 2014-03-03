@@ -5,8 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Users/Cate/Documents/Code/Jars/core.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/Users/Cate/Documents/Code/Jars/easymock-3.2/easymock-3.2.jar"/>
-	<classpathentry kind="lib" path="/Users/Cate/Documents/Code/Jars/cglib-nodep-3.1.jar"/>
-	<classpathentry kind="lib" path="/Users/Cate/Documents/Code/Jars/objenesis-2.1/objenesis-2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Cate/Documents/Code/Jars/mockito-1.9.5/mockito-all-1.9.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
