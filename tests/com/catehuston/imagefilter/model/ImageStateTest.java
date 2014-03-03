@@ -1,32 +1,28 @@
 package com.catehuston.imagefilter.model;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.replay;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import processing.core.PApplet;
 import processing.core.PImage;
 
 import com.catehuston.imagefilter.color.ColorHelper;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ImageStateTest {
 	
-	@Mock PApplet applet;
-	@Mock ColorHelper colorHelper;
-	@Mock PImage image;
+	PApplet applet;
+	ColorHelper colorHelper;
+	PImage image;
 	private ImageState imageState;
 
 	@Before public void setUp() throws Exception {
-	//	applet = mock(PApplet.class);
-		//colorHelper = mock(ColorHelper.class);
-		//image = mock(PImage.class);
+		applet = createMock(PApplet.class);
+		colorHelper = createMock(ColorHelper.class);
+		image = createMock(PImage.class);
 		imageState = new ImageState(colorHelper);
 	}
 
@@ -36,9 +32,16 @@ public class ImageStateTest {
 	@Test public void testUpdateImage() {
 		// Dominant hue hidden.
 		imageState.set(image, true, false, 5, 10, 15);
+
+		colorHelper.processImageForHue(applet, image, 100, 10, false);
+		colorHelper.applyColorFilter(applet, image, 15, 5, 10, 100);
+		image.updatePixels();
+		replay(colorHelper);
+		replay(image);
 		imageState.updateImage(applet, 100, 10, 100);
-		verify(colorHelper).processImageForHue(applet, null, 100, 10, false);
-		verify(image).updatePixels();
+		
+//		verify(colorHelper).processImageForHue(applet, null, 100, 10, false);
+	//	verify(image).updatePixels();
 		
 		// Dominant hue showing.
 		

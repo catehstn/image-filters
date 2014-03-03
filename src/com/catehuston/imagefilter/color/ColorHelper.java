@@ -1,9 +1,9 @@
 package com.catehuston.imagefilter.color;
 
-import com.catehuston.imagefilter.model.HSBColor;
-
 import processing.core.PApplet;
 import processing.core.PImage;
+
+import com.catehuston.imagefilter.model.HSBColor;
 
 public class ColorHelper {
 	

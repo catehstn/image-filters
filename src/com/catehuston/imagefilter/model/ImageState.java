@@ -1,9 +1,9 @@
 package com.catehuston.imagefilter.model;
 
-import com.catehuston.imagefilter.color.ColorHelper;
-
 import processing.core.PApplet;
 import processing.core.PImage;
+
+import com.catehuston.imagefilter.color.ColorHelper;
 
 public class ImageState {
 	
@@ -50,9 +50,9 @@ public class ImageState {
 	}
 	
 	public void updateImage(PApplet applet, int hueRange, int hueTolerance, int rgbColorRange) {
-		if (dominantHueShowing()) {
+		if (dominantHueShowing) {
 			colorHelper.processImageForHue(applet, image, hueRange, hueTolerance, true);
-		} else if (dominantHueHidden()) {
+		} else if (dominantHueHidden) {
 			colorHelper.processImageForHue(applet, image, hueRange, hueTolerance, false);
 		}
 		colorHelper.applyColorFilter(applet, image, redFilter,
@@ -125,6 +125,7 @@ public class ImageState {
 	// For testing purposes only.
 	protected void set(PImage image, boolean dominantHueHidden, boolean dominantHueShowing,
 			int blueFilter, int greenFilter, int redFilter) {
+		this.image = image;
 		this.dominantHueHidden = dominantHueHidden;
 		this.dominantHueShowing = dominantHueShowing;
 		this.blueFilter = blueFilter;
