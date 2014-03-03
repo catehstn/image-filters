@@ -18,7 +18,7 @@ public class ColorHelper {
 		if (lower < upper) {
 			return hue < upper && hue > lower;
 		} else {
-			return hue > upper || hue < lower;
+			return hue < upper || hue > lower;
 		}
 	}
 	
