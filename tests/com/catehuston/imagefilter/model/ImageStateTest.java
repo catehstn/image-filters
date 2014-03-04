@@ -24,6 +24,7 @@ public class ImageStateTest {
 	@Mock PApplet applet;
 	@Mock ColorHelper colorHelper;
 	@Mock IFAImage image;
+	
 	private ImageState imageState;
 
 	@Before public void setUp() throws Exception {

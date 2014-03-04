@@ -5,6 +5,7 @@ import java.io.File;
 import processing.core.PApplet;
 
 import com.catehuston.imagefilter.color.ColorHelper;
+import com.catehuston.imagefilter.color.PixelColorHelper;
 import com.catehuston.imagefilter.model.ImageState;
 
 
@@ -28,7 +29,7 @@ public class ImageFilterApp extends PApplet {
 
 	public void setup() {
 		noLoop();
-		imageState = new ImageState(new ColorHelper());
+		imageState = new ImageState(new ColorHelper(new PixelColorHelper()));
 		
 		// Set up the view.
 		size(imageMax + sideBarWidth, imageMax);
@@ -78,15 +79,11 @@ public class ImageFilterApp extends PApplet {
 	
 	// Callback for selectInput(), has to be public to be found.
 	public void fileSelected(File file) {
-		System.out.println("fileSelected");
 		if (file == null) {
 			println("User hit cancel.");
 		} else {
-			System.out.println("file selected");
 			imageState.setFilepath(file.getAbsolutePath());
-			System.out.println("set up image fileSelected");
 			imageState.setUpImage(this, imageMax);
-			System.out.println("redraw");
 			redraw();
 		}
 	}

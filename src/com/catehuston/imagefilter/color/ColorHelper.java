@@ -7,6 +7,12 @@ import com.catehuston.imagefilter.model.IFAImage;
 
 public class ColorHelper {
 	
+	private PixelColorHelper pixelColorHelper;
+	
+	public ColorHelper(PixelColorHelper pixelColorHelper) {
+		this.pixelColorHelper = pixelColorHelper;
+	}
+	
 	public boolean hueInRange(float hue, int hueRange, float lower, float upper) {
 		// Need to compensate for it being circular - can go around.
 		if (lower < 0) {
@@ -31,9 +37,9 @@ public class ColorHelper {
 
 		for (int i = 0; i < numberOfPixels; i++) {
 			int pixel = img.getPixel(i);
-			int hue = Math.round(applet.hue(pixel));
-			float saturation = applet.saturation(pixel);
-			float brightness = applet.brightness(pixel);
+			int hue = Math.round(pixelColorHelper.hue(applet, pixel));
+			float saturation = pixelColorHelper.saturation(applet, pixel);
+			float brightness = pixelColorHelper.brightness(applet, pixel);
 			hues[hue]++;
 			saturations[hue] += saturation;
 			brightnesses[hue] += brightness;
@@ -66,32 +72,32 @@ public class ColorHelper {
 		float upper = dominantHue.h + hueTolerance;
 		for (int i = 0; i < numberOfPixels; i++) {
 			int pixel = img.getPixel(i);
-			float hue = applet.hue(pixel);
+			float hue = pixelColorHelper.hue(applet, pixel);
 			if (hueInRange(hue, hueRange, lower, upper) == showHue) {
-				float brightness = applet.brightness(pixel);
-				img.setPixel(i, applet.color(brightness));
+				float brightness = pixelColorHelper.brightness(applet, pixel);
+				img.setPixel(i, pixelColorHelper.color(applet, brightness));
 			}
 		}
 		img.updatePixels();
 	}
 	
 	public void applyColorFilter(PApplet applet, IFAImage img, int minRed,
-			int minBlue, int minGreen, int colorRange) {
+			int minGreen, int minBlue, int colorRange) {
 		applet.colorMode(PApplet.RGB, colorRange);
 		img.loadPixels();
 		int numberOfPixels = img.getPixels().length;
 		for (int i = 0; i < numberOfPixels; i++) {
 			int pixel = img.getPixel(i);
-			int alpha = Math.round(applet.alpha(pixel));
-			int red = Math.round(applet.red(pixel));
-			int green = Math.round(applet.green(pixel));
-			int blue = Math.round(applet.blue(pixel));
+			int alpha = Math.round(pixelColorHelper.alpha(applet, pixel));
+			int red = Math.round(pixelColorHelper.red(applet, pixel));
+			int green = Math.round(pixelColorHelper.green(applet, pixel));
+			int blue = Math.round(pixelColorHelper.blue(applet, pixel));
 			
 			red = (red >= minRed) ? red : 0;
 			green = (green >= minGreen) ? green : 0;
 			blue = (blue >= minBlue) ? blue : 0;
 			
-			img.setPixel(i, applet.color((float) red, (float) green, (float) blue, (float) alpha));
+			img.setPixel(i, pixelColorHelper.color(applet, (float) red, (float) green, (float) blue, (float) alpha));
 		}
 	}
 }

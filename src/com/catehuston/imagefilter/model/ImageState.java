@@ -55,8 +55,8 @@ public class ImageState {
 		} else if (dominantHueHidden) {
 			colorHelper.processImageForHue(applet, image, hueRange, hueTolerance, false);
 		}
-		colorHelper.applyColorFilter(applet, image, redFilter,
-				blueFilter, greenFilter, rgbColorRange);
+		colorHelper.applyColorFilter(applet, image, redFilter, greenFilter,
+				blueFilter, rgbColorRange);
 		image.updatePixels();
 	}
 
