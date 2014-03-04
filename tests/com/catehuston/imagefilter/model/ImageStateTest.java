@@ -2,7 +2,6 @@ package com.catehuston.imagefilter.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -66,60 +65,37 @@ public class ImageStateTest {
 	
 	@Test public void testKeyPress() {
 		imageState.processKeyPress('r', 5, 100);
-		assertFalse(imageState.dominantHueHidden());
-		assertFalse(imageState.dominantHueShowing());
-		assertEquals(5, imageState.redFilter());
-		assertEquals(0, imageState.greenFilter());
-		assertEquals(0, imageState.blueFilter());
+		assertState(false, false, 5, 0, 0);
 		
 		imageState.processKeyPress('e', 5, 100);
-		assertFalse(imageState.dominantHueHidden());
-		assertFalse(imageState.dominantHueShowing());
-		assertEquals(0, imageState.redFilter());
-		assertEquals(0, imageState.greenFilter());
-		assertEquals(0, imageState.blueFilter());
+		assertState(false, false, 0, 0, 0);
 		
 		imageState.processKeyPress('g', 5, 100);
-		assertFalse(imageState.dominantHueHidden());
-		assertFalse(imageState.dominantHueShowing());
-		assertEquals(0, imageState.redFilter());
-		assertEquals(5, imageState.greenFilter());
-		assertEquals(0, imageState.blueFilter());
+		assertState(false, false, 0, 5, 0);
 		
 		imageState.processKeyPress('f', 5, 100);
-		assertFalse(imageState.dominantHueHidden());
-		assertFalse(imageState.dominantHueShowing());
-		assertEquals(0, imageState.redFilter());
-		assertEquals(0, imageState.greenFilter());
-		assertEquals(0, imageState.blueFilter());
+		assertState(false, false, 0, 0, 0);
 		
 		imageState.processKeyPress('b', 5, 100);
-		assertFalse(imageState.dominantHueHidden());
-		assertFalse(imageState.dominantHueShowing());
-		assertEquals(0, imageState.redFilter());
-		assertEquals(0, imageState.greenFilter());
-		assertEquals(5, imageState.blueFilter());
+		assertState(false, false, 0, 0, 5);
 		
 		imageState.processKeyPress('v', 5, 100);
-		assertFalse(imageState.dominantHueHidden());
-		assertFalse(imageState.dominantHueShowing());
-		assertEquals(0, imageState.redFilter());
-		assertEquals(0, imageState.greenFilter());
-		assertEquals(0, imageState.blueFilter());
+		assertState(false, false, 0, 0, 0);
 		
 		imageState.processKeyPress('h', 5, 100);
-		assertTrue(imageState.dominantHueHidden());
-		assertFalse(imageState.dominantHueShowing());
-		assertEquals(0, imageState.redFilter());
-		assertEquals(0, imageState.greenFilter());
-		assertEquals(0, imageState.blueFilter());
+		assertState(true, false, 0, 0, 0);
 		
 		imageState.processKeyPress('s', 5, 100);
-		assertFalse(imageState.dominantHueHidden());
-		assertTrue(imageState.dominantHueShowing());
-		assertEquals(0, imageState.redFilter());
-		assertEquals(0, imageState.greenFilter());
-		assertEquals(0, imageState.blueFilter());
+		assertState(false, true, 0, 0, 0);
+	}
+	
+	private void assertState(boolean dominantHueHidden, boolean dominantHueShowing,
+			int redFilter, int greenFilter, int blueFilter) {
+		assertEquals(dominantHueHidden, imageState.dominantHueHidden());
+		assertEquals(dominantHueShowing, imageState.dominantHueShowing());
+		assertEquals(redFilter, imageState.redFilter());
+		assertEquals(greenFilter, imageState.greenFilter());
+		assertEquals(blueFilter, imageState.blueFilter());
 	}
 	
 	@Test public void testSetupImage() {
@@ -132,12 +108,7 @@ public class ImageStateTest {
 	@Test public void testResetImage() {
 		when(applet.loadImage(null)).thenReturn(image);
 		imageState.set(image, true, true, 5, 10, 15);
-		imageState.resetImage(applet, 10);;
-		assertEquals(0, imageState.redFilter());
-		assertEquals(0, imageState.greenFilter());
-		assertEquals(0, imageState.blueFilter());
-		assertFalse(imageState.dominantHueHidden());
-		assertFalse(imageState.dominantHueShowing());
-		
+		imageState.resetImage(applet, 10);
+		assertState(false, false, 0, 0, 0);
 	}
 }
