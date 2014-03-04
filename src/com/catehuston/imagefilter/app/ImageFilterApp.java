@@ -78,11 +78,15 @@ public class ImageFilterApp extends PApplet {
 	
 	// Callback for selectInput(), has to be public to be found.
 	public void fileSelected(File file) {
+		System.out.println("fileSelected");
 		if (file == null) {
 			println("User hit cancel.");
 		} else {
+			System.out.println("file selected");
 			imageState.setFilepath(file.getAbsolutePath());
+			System.out.println("set up image fileSelected");
 			imageState.setUpImage(this, imageMax);
+			System.out.println("redraw");
 			redraw();
 		}
 	}
@@ -90,7 +94,7 @@ public class ImageFilterApp extends PApplet {
 	private void drawImage() {
 		imageMode(CENTER);
 		imageState.updateImage(this, hueRange, hueTolerance, rgbColorRange);;
-		image(imageState.image(), 320, 320, imageState.image().width, imageState.image().height);
+		image(imageState.image().image(), 320, 320, imageState.image().getWidth(), imageState.image().getHeight());
 	}
 	
 	public void keyPressed() {

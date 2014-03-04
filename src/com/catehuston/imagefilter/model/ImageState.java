@@ -1,14 +1,13 @@
 package com.catehuston.imagefilter.model;
 
 import processing.core.PApplet;
-import processing.core.PImage;
 
 import com.catehuston.imagefilter.color.ColorHelper;
 
 public class ImageState {
 	
 	ColorHelper colorHelper;
-	PImage image;
+	IFAImage image;
 	String filepath;
 	
 	boolean dominantHueHidden = false;
@@ -19,9 +18,10 @@ public class ImageState {
 	
 	public ImageState(ColorHelper colorHelper) {
 		this.colorHelper = colorHelper;
+		image = new IFAImage();
 	}
 	
-	public PImage image() {
+	public IFAImage image() {
 		return image;
 	}
 
@@ -98,16 +98,15 @@ public class ImageState {
 	}
 	
 	public void setUpImage(PApplet applet, int imageMax) {
-		image = null;
-		image = applet.loadImage(filepath);
+		image.update(applet, filepath);
 		// Fix the size.
-		if (image.width > imageMax || image.height > imageMax) {
+		if (image.getWidth() > imageMax || image.getHeight() > imageMax) {
 			int imgWidth = imageMax;
 			int imgHeight = imageMax;
-			if (image.width > image.height) {
-				imgHeight = (imgHeight *  image.height) / image.width;
+			if (image.getWidth() > image.getHeight()) {
+				imgHeight = (imgHeight *  image.getHeight()) / image.getWidth();
 			} else {
-				imgWidth = (imgWidth * image.width) / image.height;
+				imgWidth = (imgWidth * image.getWidth()) / image.getHeight();
 			}
 			image.resize(imgWidth, imgHeight);
 		}
@@ -123,7 +122,7 @@ public class ImageState {
 	}
 	
 	// For testing purposes only.
-	protected void set(PImage image, boolean dominantHueHidden, boolean dominantHueShowing,
+	protected void set(IFAImage image, boolean dominantHueHidden, boolean dominantHueShowing,
 			int blueFilter, int greenFilter, int redFilter) {
 		this.image = image;
 		this.dominantHueHidden = dominantHueHidden;

@@ -1,7 +1,6 @@
 package com.catehuston.imagefilter.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -16,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import processing.core.PApplet;
-import processing.core.PImage;
 
 import com.catehuston.imagefilter.color.ColorHelper;
 
@@ -25,7 +23,7 @@ public class ImageStateTest {
 	
 	@Mock PApplet applet;
 	@Mock ColorHelper colorHelper;
-	@Mock PImage image;
+	@Mock IFAImage image;
 	private ImageState imageState;
 
 	@Before public void setUp() throws Exception {
@@ -57,7 +55,7 @@ public class ImageStateTest {
 
 		imageState.updateImage(applet, 100, 10, 100);
 		
-		verify(colorHelper, never()).processImageForHue(any(PApplet.class), any(PImage.class),
+		verify(colorHelper, never()).processImageForHue(any(PApplet.class), any(IFAImage.class),
 				anyInt(), anyInt(), anyBoolean());
 		verify(colorHelper).applyColorFilter(applet, image, 15, 5, 10, 100);
 		verify(image).updatePixels();
@@ -99,14 +97,15 @@ public class ImageStateTest {
 	}
 	
 	@Test public void testSetupImage() {
-		when(applet.loadImage(null)).thenReturn(image);
+		imageState.set(image, true, true, 5, 10, 15);
+		when(image.getWidth()).thenReturn(20);
+		when(image.getHeight()).thenReturn(8);
 		imageState.setUpImage(applet, 10);
-		// TODO: If want to test this, have to figure out how to mock a field.
-		// May require wrapping PImage. 
+		verify(image).update(applet, null);
+		verify(image).resize(10, 4);
 	}
 	
 	@Test public void testResetImage() {
-		when(applet.loadImage(null)).thenReturn(image);
 		imageState.set(image, true, true, 5, 10, 15);
 		imageState.resetImage(applet, 10);
 		assertState(false, false, 0, 0, 0);
