@@ -32,59 +32,59 @@ public class ImageStateTest {
 	}
 
 	@Test public void testUpdateImageDominantHueHidden() {
-		imageState.set(image, true, false, 5, 10, 15);
+		imageState.set(image, true, false, 5, 10, 15, 10);
 
-		imageState.updateImage(applet, 100, 10, 100);
+		imageState.updateImage(applet, 100, 100);
 		
 		verify(colorHelper).processImageForHue(applet, image, 100, 10, false);
-		verify(colorHelper).applyColorFilter(applet, image, 15, 5, 10, 100);
+		verify(colorHelper).applyColorFilter(applet, image, 5, 10, 15, 100);
 		verify(image).updatePixels();
 	}
 	
 	@Test public void testUpdateDominantHueShowing() {
-		imageState.set(image, false, true, 5, 10, 15);
+		imageState.set(image, false, true, 5, 10, 15, 10);
 
-		imageState.updateImage(applet, 100, 10, 100);
+		imageState.updateImage(applet, 100, 100);
 		
 		verify(colorHelper).processImageForHue(applet, image, 100, 10, true);
-		verify(colorHelper).applyColorFilter(applet, image, 15, 5, 10, 100);
+		verify(colorHelper).applyColorFilter(applet, image, 5, 10, 15, 100);
 		verify(image).updatePixels();
 	}
 	
 	@Test public void testUpdateRGBOnly() {
-		imageState.set(image, false, false, 5, 10, 15);
+		imageState.set(image, false, false, 5, 10, 15, 10);
 
-		imageState.updateImage(applet, 100, 10, 100);
+		imageState.updateImage(applet, 100, 100);
 		
 		verify(colorHelper, never()).processImageForHue(any(PApplet.class), any(IFAImage.class),
 				anyInt(), anyInt(), anyBoolean());
-		verify(colorHelper).applyColorFilter(applet, image, 15, 5, 10, 100);
+		verify(colorHelper).applyColorFilter(applet, image, 5, 10, 15, 100);
 		verify(image).updatePixels();
 	}
 	
 	@Test public void testKeyPress() {
-		imageState.processKeyPress('r', 5, 100);
+		imageState.processKeyPress('r', 5, 100, 2, 200);
 		assertState(false, false, 5, 0, 0);
 		
-		imageState.processKeyPress('e', 5, 100);
+		imageState.processKeyPress('e', 5, 100, 2, 200);
 		assertState(false, false, 0, 0, 0);
 		
-		imageState.processKeyPress('g', 5, 100);
+		imageState.processKeyPress('g', 5, 100, 2, 200);
 		assertState(false, false, 0, 5, 0);
 		
-		imageState.processKeyPress('f', 5, 100);
+		imageState.processKeyPress('f', 5, 100, 2, 200);
 		assertState(false, false, 0, 0, 0);
 		
-		imageState.processKeyPress('b', 5, 100);
+		imageState.processKeyPress('b', 5, 100, 2, 200);
 		assertState(false, false, 0, 0, 5);
 		
-		imageState.processKeyPress('v', 5, 100);
+		imageState.processKeyPress('v', 5, 100, 2, 200);
 		assertState(false, false, 0, 0, 0);
 		
-		imageState.processKeyPress('h', 5, 100);
+		imageState.processKeyPress('h', 5, 100, 2, 200);
 		assertState(true, false, 0, 0, 0);
 		
-		imageState.processKeyPress('s', 5, 100);
+		imageState.processKeyPress('s', 5, 100, 2, 200);
 		assertState(false, true, 0, 0, 0);
 	}
 	
@@ -98,7 +98,7 @@ public class ImageStateTest {
 	}
 	
 	@Test public void testSetupImage() {
-		imageState.set(image, true, true, 5, 10, 15);
+		imageState.set(image, true, true, 5, 10, 15, 10);
 		when(image.getWidth()).thenReturn(20);
 		when(image.getHeight()).thenReturn(8);
 		imageState.setUpImage(applet, 10);
@@ -107,7 +107,7 @@ public class ImageStateTest {
 	}
 	
 	@Test public void testResetImage() {
-		imageState.set(image, true, true, 5, 10, 15);
+		imageState.set(image, true, true, 5, 10, 15, 10);
 		imageState.resetImage(applet, 10);
 		assertState(false, false, 0, 0, 0);
 	}

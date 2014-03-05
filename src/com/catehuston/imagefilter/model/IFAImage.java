@@ -46,6 +46,10 @@ public class IFAImage {
 		image.resize(width, height);
 	}
 	
+	public void save(String filepath) {
+		image.save(filepath);
+	}
+	
 	public void setPixel(int px, int color) {
 		image.pixels[px] = color;
 	}

@@ -12,25 +12,26 @@ import com.catehuston.imagefilter.model.ImageState;
 @SuppressWarnings("serial")
 public class ImageFilterApp extends PApplet {
 	
-	static final String instructions = "Press r to\nincrease red\nfilter, e to\nreduce it.\n"
-			+ "g to increase\ngreen filter, f\nto reduce it.\nb to increase\nblue filter,\nv to reduce it.\n"
-			+ "h hides the\ndominant hue\nand s shows the\ndominant hue.\nPress c to\nchoose a new\nfile. Press"
-			+ " space\nto reset";
+	static final String instructions = "R: increase red filter\nE: reduce red filter\n"
+			+ "G: increase green filter\nF: reduce green filter\nB: increase blue filter\n"
+			+ "V: reduce blue filter\nI: increase hue tolerance\nU: reduce hue tolerance\n"
+			+ "C: choose a new file\nW: save file\nSPACE: reset image";
+
 	static final int filterHeight = 2;
 	static final int filterIncrement = 5;
-	static final int hueRange = 320; 
-	static final int hueTolerance = 10;
+	static final int hueIncrement = 2;
+	static final int hueRange = 100; 
 	static final int imageMax = 640;
 	static final int rgbColorRange = 100;
 	static final int sideBarPadding = 10;
-	static final int sideBarWidth = rgbColorRange + 2 * sideBarPadding;
+	static final int sideBarWidth = rgbColorRange + 2 * sideBarPadding + 50;
 	
 	private ImageState imageState;
 
 	public void setup() {
 		noLoop();
 		imageState = new ImageState(new ColorHelper(new PixelColorHelper()));
-		
+
 		// Set up the view.
 		size(imageMax + sideBarWidth, imageMax);
 		background(0);
@@ -66,6 +67,13 @@ public class ImageFilterApp extends PApplet {
 		line(x, y, x + rgbColorRange, y);
 		line(x + imageState.blueFilter(), y - filterHeight,
 				x + imageState.blueFilter(), y + filterHeight);
+		
+		// Draw white line.
+		y += 2 * sideBarPadding;
+		stroke(hueRange);
+		line(x, y, x + 100, y);
+		line(x + imageState.hueTolerance(), y - filterHeight,
+				x + imageState.hueTolerance(), y + filterHeight);
 
 		y += 4 * sideBarPadding;
 		text(instructions, x, y);
@@ -90,17 +98,20 @@ public class ImageFilterApp extends PApplet {
 	
 	private void drawImage() {
 		imageMode(CENTER);
-		imageState.updateImage(this, hueRange, hueTolerance, rgbColorRange);;
-		image(imageState.image().image(), 320, 320, imageState.image().getWidth(), imageState.image().getHeight());
+		imageState.updateImage(this, hueRange, rgbColorRange);;
+		image(imageState.image().image(), imageMax/2, imageMax/2, imageState.image().getWidth(),
+				imageState.image().getHeight());
 	}
 	
 	public void keyPressed() {
 		if (key == 'c') {
 			chooseFile();
+		} else if (key == 'w') {
+			imageState.image().save(imageState.filepath() + "-new.png");
 		} else if (key == ' ') {
 			imageState.resetImage(this, imageMax);
 		}
-		 imageState.processKeyPress(key, filterIncrement, rgbColorRange);
+		 imageState.processKeyPress(key, filterIncrement, rgbColorRange, hueIncrement, hueRange);
 		 redraw();
 	}
 	

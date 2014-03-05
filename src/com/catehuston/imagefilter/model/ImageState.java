@@ -10,15 +10,19 @@ public class ImageState {
 	IFAImage image;
 	String filepath;
 	
+	public static final int initialHueTolerance = 5;
+	
 	boolean dominantHueHidden = false;
 	boolean dominantHueShowing = false;
 	int blueFilter = 0;
 	int greenFilter = 0;
+	int hueTolerance = 0;
 	int redFilter = 0;
 	
 	public ImageState(ColorHelper colorHelper) {
 		this.colorHelper = colorHelper;
 		image = new IFAImage();
+		hueTolerance = initialHueTolerance;
 	}
 	
 	public IFAImage image() {
@@ -37,6 +41,10 @@ public class ImageState {
 		return redFilter;
 	}
 	
+	public int hueTolerance() {
+		return hueTolerance;
+	}
+	
 	public boolean dominantHueShowing() {
 		return dominantHueShowing;
 	}
@@ -49,7 +57,11 @@ public class ImageState {
 		this.filepath = filepath;
 	}
 	
-	public void updateImage(PApplet applet, int hueRange, int hueTolerance, int rgbColorRange) {
+	public String filepath() {
+		return filepath;
+	}
+	
+	public void updateImage(PApplet applet, int hueRange, int rgbColorRange) {
 		if (dominantHueShowing) {
 			colorHelper.processImageForHue(applet, image, hueRange, hueTolerance, true);
 		} else if (dominantHueHidden) {
@@ -60,7 +72,7 @@ public class ImageState {
 		image.updatePixels();
 	}
 
-	public void processKeyPress(char key, int inc, int rgbColorRange) {
+	public void processKeyPress(char key, int inc, int rgbColorRange, int hueIncrement, int hueRange) {
 		switch (key) {
 		 case 'r':
 			 redFilter+=inc;
@@ -85,6 +97,14 @@ public class ImageState {
 		 case 'v':
 			 blueFilter-=inc;
 			 blueFilter = Math.max(blueFilter, 0);
+			 break;
+		 case 'i':
+			 hueTolerance+=hueIncrement;
+			 hueTolerance = Math.min(hueTolerance, hueRange);
+			 break;
+		 case 'u':
+			 hueTolerance-=hueIncrement;
+			 hueTolerance = Math.max(hueTolerance, 0);
 			 break;
 		 case 'h':
 			 dominantHueHidden = true;
@@ -116,6 +136,7 @@ public class ImageState {
 		redFilter = 0;
 		greenFilter = 0;
 		blueFilter = 0;
+		hueTolerance = initialHueTolerance;
 		dominantHueShowing = false;
 		dominantHueHidden = false;
 		setUpImage(applet, imageMax);
@@ -123,12 +144,13 @@ public class ImageState {
 	
 	// For testing purposes only.
 	protected void set(IFAImage image, boolean dominantHueHidden, boolean dominantHueShowing,
-			int blueFilter, int greenFilter, int redFilter) {
+			int redFilter, int greenFilter, int blueFilter, int hueTolerance) {
 		this.image = image;
 		this.dominantHueHidden = dominantHueHidden;
 		this.dominantHueShowing = dominantHueShowing;
 		this.blueFilter = blueFilter;
 		this.greenFilter = greenFilter;
 		this.redFilter = redFilter;
+		this.hueTolerance = hueTolerance;
 	}
 }
