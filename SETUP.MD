@@ -28,4 +28,4 @@ Creating a class that extends PApplet
 
 The blank applet!
 
-![Blank applet](https://docs.google.com/file/d/0B5T9ZM8rsBJbMXoweEFoYzFRTEk)
+![Blank applet](https://raw.githubusercontent.com/catehstn/image-filters/master/setup%20images/blankApplet.png)
