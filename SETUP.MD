@@ -1,3 +1,5 @@
+Detailed setup instructions.
+
 Empty Eclipse Workspace
 
 ![Empty eclipse](https://raw.githubusercontent.com/catehstn/image-filters/master/setup%20images/eclipseEmptyScreenShot.png)
