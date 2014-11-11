@@ -1,30 +1,30 @@
 Empty Eclupse Workspace
 
-![Empty eclipse](https://docs.google.com/file/d/0B5T9ZM8rsBJbMXoweEFoYzFRTEk/)
+![Empty eclipse](https://raw.githubusercontent.com/catehstn/image-filters/master/setup%20images/eclipseEmptyScreenShot.png)
 
 Creating a new project
 
-![Creating a new project](https://docs.google.com/file/d/0B5T9ZM8rsBJbR1NqQ09nZk8zRWs)
+![Creating a new project](https://raw.githubusercontent.com/catehstn/image-filters/master/setup%20images/makingANewProject.png)
 
 Finding core.jar - on a mac, select “Show Package Contents”.
 
-![Show Package Contents](https://docs.google.com/file/d/0B5T9ZM8rsBJbVDltVEFqUmZoWDg)
+![Show Package Contents](https://raw.githubusercontent.com/catehstn/image-filters/master/setup%20images/lookingInsideOfProcessing.png)
 
 You will find core.jar under Contents -> Java
 
-![Find core.jar](https://docs.google.com/file/d/0B5T9ZM8rsBJbQ2w3Z3Q2OUFCeG8)
+![Find core.jar](https://raw.githubusercontent.com/catehstn/image-filters/master/setup%20images/findingCoreJar.png)
 
 Right click (or control + click) and select “Build Path -> Add to Build Path”
 
-![Add to build path](https://docs.google.com/file/d/0B5T9ZM8rsBJbM3lEZG90RW8zR0U)
+![Add to build path](https://raw.githubusercontent.com/catehstn/image-filters/master/setup%20images/addingToTheBuildPath.png)
 
 Once it has been added to the build path it will look like this.
 
-![After adding to build path](https://docs.google.com/file/d/0B5T9ZM8rsBJbcGx6N3BJWEJyajg)
+![After adding to build path](https://raw.githubusercontent.com/catehstn/image-filters/master/setup%20images/onTheBuildPath.png)
 
 Creating a class that extends PApplet
 
-![Creating class extending PApplet](https://docs.google.com/file/d/0B5T9ZM8rsBJbQ1hUX2w5TG1ITTA)
+![Creating class extending PApplet](https://raw.githubusercontent.com/catehstn/image-filters/master/setup%20images/creatingSomethingThatExtendsPApplet.png)
 
 The blank applet!
 
